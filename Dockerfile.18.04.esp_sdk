@@ -1,0 +1,19 @@
+From ubuntu:18.04
+
+WORKDIR esp
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=America/Chicago
+
+RUN DEBIAN_FRONTEND="noninteractive" apt-get update && apt-get install -y make unrar-free autoconf \
+    automake libtool gcc g++ gperf flex bison texinfo gawk ncurses-dev libexpat-dev python-dev \
+    python python-serial sed git unzip bash help2man wget bzip2 git vim libtool-bin
+
+RUN git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
+RUN git clone --recursive https://github.com/martin-ger/esp_wifi_repeater.git
+
+RUN cd esp-open-sdk && echo CT_EXPERIMENTAL=y >> crosstool-config-overrides \
+    && echo CT_ALLOW_BUILD_AS_ROOT=y >> crosstool-config-overrides \
+    && echo CT_ALLOW_BUILD_AS_ROOT_SURE=y >> crosstool-config-overrides && make
+
+
